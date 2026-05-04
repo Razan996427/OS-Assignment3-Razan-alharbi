@@ -63,7 +63,7 @@ class SharedResources {
     
     // Method to increment completed process counter
     public static void incrementCompletedProcess() {
-        // TODO: PcounterLock.lock();
+    counterLock.lock(); // TODO: PcounterLock.lock();
      try {
     completedProcessCount++;
        } finally {
@@ -122,12 +122,17 @@ class Process implements Runnable {
         // TODO #3: Acquire CPU semaphore before executing
         // This ensures only allowed number of processes run simultaneously
         
-        try {
-            // Acquire CPU before execution
-           SharedResources.cpuSemaphore.acquire();
-            if (startTime == -1) {
-                startTime = System.currentTimeMillis();
-            }
+          try {
+             try {
+            SharedResources.cpuSemaphore.acquire();
+        } catch (InterruptedException e) {
+            System.out.println("Thread interrupted while acquiring semaphore.");
+            return;
+        }
+
+        if (startTime == -1) {
+            startTime = System.currentTimeMillis();
+        }
     
             // Increment context switch counter
             SharedResources.incrementContextSwitch();
