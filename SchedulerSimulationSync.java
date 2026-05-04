@@ -123,10 +123,12 @@ class Process implements Runnable {
         // This ensures only allowed number of processes run simultaneously
         
         try {
+            // Acquire CPU before execution
+           SharedResources.cpuSemaphore.acquire();
             if (startTime == -1) {
                 startTime = System.currentTimeMillis();
             }
-            
+    
             // Increment context switch counter
             SharedResources.incrementContextSwitch();
             
@@ -182,6 +184,8 @@ class Process implements Runnable {
             System.out.println();
             
         } finally {
+            // Release CPU after execution
+             SharedResources.cpuSemaphore.release();
             // TODO #4: Release CPU semaphore here
             // Always release in finally block to prevent deadlocks!
         }
@@ -204,6 +208,8 @@ class Process implements Runnable {
     public void runToCompletion() {
         // TODO: Similar synchronization needed here
         try {
+            // Acquire CPU before execution
+            SharedResources.cpuSemaphore.acquire();
             System.out.println(Colors.BRIGHT_CYAN + "  ⚡ " + Colors.BOLD + Colors.CYAN + name + 
                               Colors.RESET + Colors.BRIGHT_CYAN + " is the last process, running to completion" + 
                               Colors.RESET + " [" + remainingTime + "ms]");
@@ -220,7 +226,11 @@ class Process implements Runnable {
             System.out.println();
         } catch (InterruptedException e) {
             System.out.println(Colors.RED + "  ✗ " + name + " was interrupted." + Colors.RESET);
-        }
+
+        }finally {
+         // Release CPU after execution
+         SharedResources.cpuSemaphore.release();
+         }
     }
     
     public String getName() {
