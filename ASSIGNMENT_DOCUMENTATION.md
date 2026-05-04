@@ -160,53 +160,70 @@ Fine-grained locking is more complicated but provides superior performance, wher
 ### Critical Section #1: Counter Variables
 
 **Which variables**: 
+contextSwitchCount, completedProcessCount, totalWaitingTime
 
 **Why they need protection**: 
-
+Multiple threads update them concurrently.
 **Synchronization mechanism used**: 
-
+ReentrantLock
 **Code snippet**:
 ```java
 // Paste your implementation here
-```
+counterLock.lock();
+try {
+    contextSwitchCount++;
+   } finally {
+    counterLock.unlock();
+  }
 
 **Justification**: 
-
+Ensures atomic updates and prevents race conditions.
 ---
 
 ### Critical Section #2: Execution Log
 
-**What resource**: 
+**What resource**: executionLog (ArrayList)
 
-**Why it needs protection**: 
+**Why it needs protection**: Not thread-safe
 
 **Synchronization mechanism used**: 
+ReentrantLock
 
 **Code snippet**:
 ```java
 // Paste your implementation here
-```
+logLock.lock();
+ try {
+    executionLog.add(message);
+     } finally {
+    logLock.unlock();
+  }
 
 **Justification**: 
-
+Prevents data corruption and exceptions.
 ---
 
 ### Critical Section #3: CPU Semaphore
 
-**Purpose of semaphore**: 
+**Purpose of semaphore**: Limit CPU access to one process
 
-**Number of permits and why**: 
+**Number of permits and why**: 1 → simulate single CPU
 
-**Where implemented**: 
+**Where implemented**: Inside run() and runToCompletion()
 
 **Code snippet**:
 ```java
 // Paste your implementation here
-```
+SharedResources.cpuSemaphore.acquire();
+try {
+    // execution
+} finally {
+    SharedResources.cpuSemaphore.release();
+}
 
 **Effect on program behavior**: 
 
----
+Ensures sequential execution and prevents conflicts.
 
 ## Part 4: Testing and Verification (2 marks)
 
