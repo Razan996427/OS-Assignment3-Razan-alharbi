@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 // ANSI Color Codes for enhanced terminal output
 class Colors {
@@ -39,7 +40,8 @@ class SharedResources {
      public static final ReentrantLock counterLock = new ReentrantLock();
      // Added lock for execution log synchronization
      public static final ReentrantLock logLock = new ReentrantLock();
-    
+    // Added semaphore to control CPU access (1 process at a time)
+      public static final Semaphore cpuSemaphore = new Semaphore(1);
     // TODO #1: Add a ReentrantLock(s) here to protect critical sections
     // Example: public static final ReentrantLock lock = new ReentrantLock();
 
