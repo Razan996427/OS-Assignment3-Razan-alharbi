@@ -236,50 +236,84 @@ Ensures sequential execution and prevents conflicts.
 ```
 
 **Results**: All runs produced consistent values.
+═══ Synchronization Statistics ═══
+Total Context Switches: 16
+Total Completed Processes: 10
+Total Waiting Time: 251794ms
+Average Waiting Time: 25179ms
+
+═══ Process Summary Table ═══
+Process    Priority     Burst Time   Waiting Time
+────────────────────────────────────────────────
+P1         2            7286         31127       
+P2         2            3785         4020        
+P3         5            5256         34407       
+P4         3            2595         11815       
+P5         3            2565         14415       
+P6         3            2859         16979       
+P7         4            5636         35665       
+P8         2            3261         23847       
+P9         4            8620         38212       
+P10        5            4898         41307       
+
+═══ Execution Log Summary ═══
+Total log entries: 32
 (Show that running multiple times produces consistent, correct results)
 
-**Why synchronization is necessary**: Without locks, counters may produce incorrect results.
-(Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
-**Conclusion**: Synchronization ensures correctness.
+**Why synchronization is necessary**: Without synchronization, race conditions could occur when multiple threads update shared variables such as contextSwitchCount, completedProcessCount, and totalWaitingTime. This could lead to incorrect values such as missing increments or inconsistent totals. Additionally, concurrent access to executionLog (ArrayList) could cause data corruption or runtime exceptions
+**Conclusion**: The use of locks and semaphores ensures that all shared resources are accessed safely, resulting in consistent and correct outputs across multiple executions.
 
 ---
 
 ### Test 2: Exception Testing
-**What I tested**: Checking for ConcurrentModificationException
+**What I tested**: 
+Checking for ConcurrentModificationException and other concurrency-related issues.
 
-**Testing procedure**: 
+**Testing procRan the program multiple times under normal conditions.
+Observed execution log behavior while multiple threads were writing to it.
+Verified that all log entries were added without errors.edure**: 
 
 **Results**: No ConcurrentModificationException occurred.
 
-**What this proves**: Execution log is properly synchronized.
-
+**What this proves**: 
+This proves that the executionLog is properly synchronized using ReentrantLock, ensuring safe concurrent modifications. It confirms that thread-safe access to shared collections has been correctly implemented.
 ---
 
 ### Test 3: Correctness Verification
-**What I tested**: Verifying correct final values (total burst time, context switches, etc.)
+**What I tested**: Verifying that the final values of shared variables are correct and match expected logical outcomes.
 
-**Expected values**: All processes completed, correct waiting time.
-
-**Actual values**: Matched expected results.
+**Expected values**:All processes should complete execution.
+completedProcessCount should equal the total number of processes.
+Waiting time values should be reasonable and non-negative.
+Context switches should reflect the number of process executions. 
+**Actual values**: All processes completed successfully.
+completedProcessCount matched the total number of processes.
+Waiting time values were consistent and logical.
+Context switch count was correctly incremented.
 
 **Analysis**: 
-Synchronization worked correctly.
+The results match the expected values, indicating that synchronization mechanisms are working correctly. There were no missing updates or incorrect calculations, which confirms that race conditions were successfully prevented.
 ---
 
 ### Test 4: Different Scenarios
-**Scenario tested**: [e.g., different time quantum, more processes, etc.]
+**Scenario tested**: 
+Running the program with different time quantum values and varying number of processes (automatically generated using different student ID seeds).
+**Purpose**: To ensure that the synchronization logic works correctly under different scheduling conditions and workloads.
 
-**Purpose**: Different time quantum values
+**Results**: The program behaved correctly in all scenarios. Processes executed in an orderly manner, and no synchronization issues or inconsistencies were observed.
 
-**Results**: Program remained stable
-
-**What I learned**: Synchronization works under all conditions
+**What I learned**:  I learned that proper synchronization ensures program stability regardless of input variations. Using locks and semaphores makes the system robust and reliable under different execution conditions.
 
 ---
 
 ## Part 5: Reflection and Learning
 
 ### What I learned about synchronization:
+This task taught me that synchronization is crucial for preventing race situations and guaranteeing accurate outcomes when many threads access shared resources. I was aware of how ReentrantLock offers mutual exclusion to safeguard important areas. Additionally, I discovered how Semaphore can regulate access to scarce resources, including limiting the number of processes that can use the CPU at once.
+
+I also discovered that certain data structures, such as ArrayList, need explicit synchronization and are not thread-safe. I discovered how crucial it is to use try-finally blocks to ensure that locks are always released, which helps avoid deadlocks. I also comprehended how performance is impacted by the distinction between fine-grained and coarse-grained locking.
+
+Overall, this assignment helped me better grasp how to write multithreaded systems that are secure and dependable.
 
 [6-8 sentences about key concepts, challenges, insights]
 
@@ -287,15 +321,21 @@ Synchronization worked correctly.
 
 ### Real-world applications:
 
+
 Give TWO examples where synchronization is critical:
 
-**Example 1**: 
+**Example 1**: banking systems, where the same account balance may be updated concurrently by several transactions. Deposits and withdrawals are performed accurately and without data corruption thanks to synchronization.
 
 **Example 2**: 
-
+CPU scheduling in operating systems, in which several tasks vie for the CPU. Processes are carried out fairly and under control thanks to synchronization.
 ---
 
 ### How I would explain synchronization to others:
+Organizing access to a shared resource such that only one person uses it at a time when needed is similar to synchronization. Consider an office with just one printer, for instance. The output will be disorganized or tainted if several people attempt to use it simultaneously without cooperation.
+
+Synchronization in programming makes ensuring that threads don't interfere with one another when they try to access shared data. Semaphores and locks are examples of tools that function as rules to restrict who can use a resource and when.
+
+While semaphores may offer restricted entry based on the quantity of permits, locks guarantee exclusive access. We can prevent mistakes and guarantee that programs operate as intended by properly utilizing synchronization.
 
 [Explain to someone who just finished Assignment 1 - use simple terms and analogies]
 
@@ -303,7 +343,7 @@ Give TWO examples where synchronization is critical:
 
 ## Part 6: GitHub Repository Information
 
-**Repository URL**: 
+**Repository URL**: https://github.com/Razan996427/OS-Assignment3-Razan-alharbi.git
 
 **Number of commits**: 
 
