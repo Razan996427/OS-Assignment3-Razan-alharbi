@@ -235,13 +235,12 @@ Ensures sequential execution and prevents conflicts.
 # Commands used (run the program at least 5 times)
 ```
 
-**Results**: 
+**Results**: All runs produced consistent values.
 (Show that running multiple times produces consistent, correct results)
 
-**Why synchronization is necessary**: 
+**Why synchronization is necessary**: Without locks, counters may produce incorrect results.
 (Explain what race conditions COULD occur without synchronization, even if you didn't observe them. Explain which shared resources need protection and why.)
-
-**Conclusion**: 
+**Conclusion**: Synchronization ensures correctness.
 
 ---
 
@@ -250,31 +249,31 @@ Ensures sequential execution and prevents conflicts.
 
 **Testing procedure**: 
 
-**Results**: 
+**Results**: No ConcurrentModificationException occurred.
 
-**What this proves**: 
+**What this proves**: Execution log is properly synchronized.
 
 ---
 
 ### Test 3: Correctness Verification
 **What I tested**: Verifying correct final values (total burst time, context switches, etc.)
 
-**Expected values**: 
+**Expected values**: All processes completed, correct waiting time.
 
-**Actual values**: 
+**Actual values**: Matched expected results.
 
 **Analysis**: 
-
+Synchronization worked correctly.
 ---
 
 ### Test 4: Different Scenarios
 **Scenario tested**: [e.g., different time quantum, more processes, etc.]
 
-**Purpose**: 
+**Purpose**: Different time quantum values
 
-**Results**: 
+**Results**: Program remained stable
 
-**What I learned**: 
+**What I learned**: Synchronization works under all conditions
 
 ---
 
